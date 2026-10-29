@@ -1,0 +1,180 @@
+---
+import { slides } from '../data/content';
+
+/* A fictional circuit — deliberately not modelled on any real track. */
+const circuit =
+  'M60 96 L164 96 C178 96 182 84 172 78 L156 70 C146 65 148 52 160 50 L186 46 C198 44 200 28 188 24 L128 12 C116 10 108 18 112 30 L116 42 C119 52 110 58 100 54 L56 36 C40 30 24 36 20 52 L16 72 C12 88 30 96 44 96 Z';
+---
+
+<div class="hud" data-hud>
+  <div class="hud-lap">
+    <button type="button" class="hud-btn" data-deck-prev aria-label="Previous section">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5"></path></svg>
+    </button>
+    <p class="hud-counter">
+      <span class="hud-lap-label">Lap</span>
+      <span class="hud-lap-num"><b data-lap-current>1</b><span aria-hidden="true"> / </span><span class="sr-only"> of </span>{slides.length}</span>
+      <span class="hud-lap-title" data-lap-title>{slides[0].title}</span>
+    </p>
+    <button type="button" class="hud-btn" data-deck-next aria-label="Next section">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5"></path></svg>
+    </button>
+    <p class="hud-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> scroll or swipe</p>
+  </div>
+
+  <svg class="hud-circuit" viewBox="0 0 210 110" role="img" aria-label="Circuit progress map" data-circuit>
+    <path class="circuit-base" d={circuit}></path>
+    <path class="circuit-done" d={circuit} data-circuit-done></path>
+    <path class="circuit-path" d={circuit} data-circuit-path></path>
+    <g data-circuit-markers></g>
+    <line class="circuit-start" x1="60" y1="90" x2="60" y2="102"></line>
+    <circle class="circuit-car" r="5" cx="60" cy="96" data-circuit-car></circle>
+  </svg>
+</div>
+
+<style>
+  .hud {
+    position: fixed;
+    z-index: 30;
+    left: calc(var(--tower-w) + clamp(36px, 4.5vw, 80px));
+    right: clamp(24px, 3vw, 48px);
+    bottom: 18px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    pointer-events: none;
+  }
+  .hud > * {
+    pointer-events: auto;
+  }
+
+  .hud-lap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hud-btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--white);
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .hud-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .hud-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .hud-counter {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    column-gap: 10px;
+    min-width: 150px;
+    padding: 0 6px;
+  }
+  .hud-lap-label {
+    font: 700 11px/1 var(--mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hud-lap-num {
+    font: 700 22px/1 var(--mono);
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+  }
+  .hud-lap-num b {
+    color: var(--accent);
+  }
+  .hud-lap-title {
+    grid-column: 1 / -1;
+    margin-top: 6px;
+    font: 700 11px/1 var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--body);
+  }
+
+  .hud-hint {
+    margin-left: 14px;
+    font: 500 11px/1 var(--mono);
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .hud-hint kbd {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 3px 6px;
+    font: inherit;
+    color: var(--body);
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+  }
+
+  .hud-circuit {
+    width: 170px;
+    height: auto;
+    overflow: visible;
+  }
+  .circuit-base {
+    fill: none;
+    stroke: var(--line-2);
+    stroke-width: 7;
+    stroke-linejoin: round;
+  }
+  .circuit-path {
+    fill: none;
+    stroke: #55575f;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+  }
+  .circuit-done {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .circuit-start {
+    stroke: var(--white);
+    stroke-width: 2.5;
+  }
+  .circuit-car {
+    fill: var(--accent);
+    stroke: var(--white);
+    stroke-width: 2;
+    filter: drop-shadow(0 0 4px var(--accent));
+  }
+  :global(.circuit-marker) {
+    fill: var(--bg);
+    stroke: var(--muted);
+    stroke-width: 1.5;
+  }
+  :global(.circuit-marker.is-passed) {
+    stroke: var(--accent);
+  }
+  :global(.circuit-marker-label) {
+    font: 700 9px var(--mono);
+    fill: var(--muted);
+  }
+
+  @media (max-width: 1180px) {
+    .hud-hint {
+      display: none;
+    }
+  }
+</style>

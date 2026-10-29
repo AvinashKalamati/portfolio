@@ -1,0 +1,87 @@
+---
+import '@fontsource/titillium-web/latin-400.css';
+import '@fontsource/titillium-web/latin-600.css';
+import '@fontsource/titillium-web/latin-700.css';
+import '@fontsource/titillium-web/latin-900.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-700.css';
+import '../styles/global.css';
+import { driver, liveries, site } from '../data/content';
+import { CAROUSEL_MQ, LIGHTS_KEY, LIVERY_KEY } from '../scripts/config';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const canonical = new URL(base, Astro.site).href;
+const ogImage = new URL(`${base}og.png`, Astro.site).href;
+const liveryIds = liveries.map((l) => l.id);
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: driver.name,
+  jobTitle: driver.role,
+  email: `mailto:${driver.email}`,
+  url: canonical,
+  address: { '@type': 'PostalAddress', addressLocality: 'Redmond', addressRegion: 'WA', addressCountry: 'US' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Clarkson University' },
+    { '@type': 'CollegeOrUniversity', name: 'JNTUK' },
+  ],
+  sameAs: [driver.github, driver.linkedin],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{site.title}</title>
+    <meta name="description" content={site.description} />
+    <meta name="author" content={driver.name} />
+    <meta name="theme-color" content="#0b0b0d" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="icon" href={`${base}favicon-32.png`} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={`${base}apple-touch-icon.png`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={driver.name} />
+    <meta property="og:title" content={site.title} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${driver.name} — ${driver.role}`} />
+    <meta property="og:locale" content={site.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={site.title} />
+    <meta name="twitter:description" content={site.description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+
+    <script is:inline define:vars={{ CAROUSEL_MQ, LIGHTS_KEY, LIVERY_KEY, liveryIds }}>
+      // Runs before first paint: restores the livery, picks the layout mode, decides on the start lights.
+      {
+        const root = document.documentElement;
+        root.classList.add('js', 'preload');
+        let seen = false;
+        try {
+          const livery = localStorage.getItem(LIVERY_KEY);
+          if (livery && liveryIds.includes(livery)) root.dataset.livery = livery;
+          seen = sessionStorage.getItem(LIGHTS_KEY) === '1';
+        } catch {
+          /* storage blocked — use defaults */
+        }
+        if (window.matchMedia(CAROUSEL_MQ).matches) root.classList.add('carousel');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduced && !seen) root.classList.add('lights-on');
+      }
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

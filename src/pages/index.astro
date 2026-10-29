@@ -1,0 +1,36 @@
+---
+import Hud from '../components/Hud.astro';
+import StartLights from '../components/StartLights.astro';
+import TimingTower from '../components/TimingTower.astro';
+import Driver from '../components/slides/Driver.astro';
+import Experience from '../components/slides/Experience.astro';
+import Hero from '../components/slides/Hero.astro';
+import Paddock from '../components/slides/Paddock.astro';
+import Podium from '../components/slides/Podium.astro';
+import Radio from '../components/slides/Radio.astro';
+import Skills from '../components/slides/Skills.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base>
+  <a class="skip-link" href="#driver">Skip to content</a>
+  <StartLights />
+  <TimingTower />
+  <main class="deck" data-deck>
+    <div class="track" data-track>
+      <Hero />
+      <Driver />
+      <Experience />
+      <Skills />
+      <Podium />
+      <Paddock />
+      <Radio />
+    </div>
+  </main>
+  <Hud />
+  <p class="sr-only" aria-live="polite" aria-atomic="true" data-live></p>
+</Base>
+
+<script>
+  import '../scripts/main';
+</script>

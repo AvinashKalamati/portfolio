@@ -1,0 +1,283 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../assets/driver-portrait.jpg';
+import { driver, heroStats, slides } from '../../data/content';
+---
+
+<section class="slide slide-hero carbon" id="home" data-slide aria-labelledby="home-title">
+  <div class="slide-inner">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="kicker"><span class="kicker-pos">P1</span>{slides[0].kicker}</p>
+        <h1 class="hero-name" id="home-title" tabindex="-1" data-slide-heading>
+          <span class="hero-first">{driver.firstName}</span>
+          <span class="hero-last">{driver.lastName}</span>
+        </h1>
+        <p class="hero-role">{driver.role} <span aria-hidden="true">·</span> <span>{driver.specialty}</span></p>
+        <p class="hero-tagline">{driver.tagline}</p>
+        <p class="hero-status">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span>
+            {driver.role} @ {driver.currentTeam} (client: {driver.currentClient}) · <strong>{driver.status}</strong>
+          </span>
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#experience">View experience <span aria-hidden="true">→</span></a>
+          <a class="btn" href={driver.github} target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+          <a class="btn" href={driver.linkedin} target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+
+        <ul class="hero-stats" aria-label="Key results">
+          {
+            heroStats.map((s) => (
+              <li class={`databox tone-${s.tone}`}>
+                <p class="databox-value">
+                  {s.value}
+                  {s.unit && <span class="databox-unit">{s.unit}</span>}
+                </p>
+                <p class="databox-label">{s.label}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="hero-legend" aria-hidden="true">
+          <span class="tone-purple">Best</span><span class="tone-green">Personal best</span><span class="tone-yellow">Standard</span>
+        </p>
+      </div>
+
+      <aside class="driver-card" aria-label="Driver card">
+        <Image
+          class="dc-photo"
+          src={portrait}
+          alt={`${driver.firstName} ${driver.lastName}`}
+          widths={[480, portrait.width]}
+          sizes="(min-width: 900px) 400px, 90vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="dc-bottom">
+          <div class="dc-top">
+            <span class="dc-tag">Driver</span>
+            <span class="dc-loc">{driver.location} · {driver.timezone}</span>
+          </div>
+          <p class="dc-name">{driver.firstName} <b>{driver.lastName}</b></p>
+          <p class="dc-team">{driver.currentTeam} <span>· client: {driver.currentClient}</span></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .slide-hero {
+    padding-top: 40px;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 36px;
+  }
+
+  .hero-name {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--sans);
+    text-transform: uppercase;
+    color: var(--white);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+  }
+  .hero-first {
+    font-weight: 400;
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+  }
+  .hero-last {
+    font-weight: 900;
+    font-size: clamp(3rem, 8.2vw, 6.6rem);
+  }
+  .hero-last::after {
+    content: '';
+    display: block;
+    width: 88px;
+    height: 4px;
+    margin-top: 16px;
+    background: var(--accent);
+  }
+
+  .hero-role {
+    margin-top: 20px;
+    font: 700 clamp(0.85rem, 1.4vw, 1rem)/1.4 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .hero-role > span:last-child {
+    color: var(--muted);
+  }
+
+  .hero-tagline {
+    margin-top: 14px;
+    max-width: 54ch;
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.55;
+  }
+
+  .hero-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 18px;
+    font: 500 13px/1.5 var(--mono);
+  }
+  .live-dot {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 4px rgb(43 217 107 / 0.18);
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  /* Driver card */
+  .driver-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    justify-self: center;
+    background: var(--panel);
+    border: 1px solid var(--line-2);
+  }
+  .driver-card :global(.dc-photo) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .dc-bottom {
+    padding: 16px 20px 18px;
+    border-top: 3px solid var(--accent);
+  }
+  .dc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font: 700 11px/1 var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--body);
+  }
+  .dc-tag {
+    padding: 5px 8px;
+    color: var(--accent-ink);
+    background: var(--accent);
+  }
+  .dc-name {
+    margin-top: 12px;
+    font: 400 22px/1.1 var(--sans);
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .dc-name b {
+    font-weight: 900;
+  }
+  .dc-team {
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-2);
+    font: 700 11.5px/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .dc-team span {
+    color: var(--muted);
+  }
+
+  /* Stats */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 32px;
+  }
+  .hero-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 12px;
+    font: 600 10.5px/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .hero-legend span::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: var(--tone);
+  }
+
+  @media (min-width: 760px) {
+    .hero-stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: clamp(32px, 4vw, 64px);
+    }
+    .driver-card {
+      width: clamp(280px, 32vw, 420px);
+    }
+  }
+
+  :global(html.carousel) .slide-hero {
+    padding-top: 0;
+  }
+  /* The card height is capped to the viewport so the portrait is never cropped. */
+  :global(html.carousel) .driver-card {
+    width: clamp(260px, calc((100svh - 300px) * 682 / 1024), 400px);
+  }
+  :global(html.carousel) .hero-first {
+    font-size: clamp(2.4rem, min(6vw, 7.6vh), 4.6rem);
+  }
+  :global(html.carousel) .hero-last {
+    font-size: clamp(3rem, min(8.2vw, 11vh), 6.6rem);
+  }
+
+  @media (max-height: 820px) {
+    :global(html.carousel) .hero-name {
+      margin-top: 12px;
+    }
+    :global(html.carousel) .hero-role {
+      margin-top: 14px;
+    }
+    :global(html.carousel) .hero-ctas {
+      margin-top: 18px;
+    }
+    :global(html.carousel) .hero-stats {
+      margin-top: 22px;
+    }
+    :global(html.carousel) .databox {
+      padding-block: 10px;
+    }
+  }
+</style>

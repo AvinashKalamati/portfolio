@@ -1,0 +1,529 @@
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+:root {
+  --bg: #0b0b0d;
+  --asphalt: #131418;
+  --panel: #17181d;
+  --panel-2: #1d1e24;
+  --line: #2a2b32;
+  --line-2: #3a3c44;
+  --white: #ffffff;
+  --body: #c9cad0;
+  --muted: #9a9ca6;
+
+  --accent: #e10600;
+  --accent-ink: #ffffff;
+  /* Accent for small text on dark backgrounds (pure F1 red is too dark for AA). */
+  --accent-text: #ff5a4f;
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+
+  /* F1 timing-screen colours */
+  --purple: #b65cff;
+  --green: #2bd96b;
+  --yellow: #ffd02e;
+
+  --sans: 'Titillium Web', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --tower-w: 236px;
+  --ease: cubic-bezier(0.7, 0, 0.2, 1);
+  --slant: 10px;
+
+  color-scheme: dark;
+}
+
+[data-livery='orange'] {
+  --accent: #ff8000;
+  --accent-ink: #0b0b0c;
+  --accent-text: #ff9a3d;
+}
+[data-livery='teal'] {
+  --accent: #00d2be;
+  --accent-ink: #0b0b0c;
+  --accent-text: #00d2be;
+}
+[data-livery='silver'] {
+  --accent: #c8ccd0;
+  --accent-ink: #0b0b0c;
+  --accent-text: #dfe2e5;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 112px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--body);
+  font: 400 16px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+strong {
+  color: var(--white);
+  font-weight: 700;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 700 13px/1 var(--mono);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* Carbon weave + asphalt grain */
+.carbon {
+  background-color: #0c0c0f;
+  background-image:
+    radial-gradient(120% 80% at 80% 0%, rgb(255 255 255 / 0.035), transparent 60%),
+    linear-gradient(27deg, #111216 5px, transparent 5px),
+    linear-gradient(207deg, #111216 5px, transparent 5px),
+    linear-gradient(27deg, #131418 5px, transparent 5px),
+    linear-gradient(207deg, #131418 5px, transparent 5px),
+    linear-gradient(90deg, #101114 10px, transparent 10px),
+    linear-gradient(#0e0f12 25%, #0d0d10 25%, #0d0d10 50%, transparent 50%, transparent 75%, #121316 75%, #121316);
+  background-size:
+    100% 100%,
+    20px 20px,
+    20px 20px,
+    20px 20px,
+    20px 20px,
+    20px 20px,
+    20px 20px;
+}
+
+/* ==========================================================================
+   Typography primitives
+   ========================================================================== */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font: 700 12px/1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--body);
+}
+.kicker::after {
+  content: '';
+  width: 44px;
+  height: 2px;
+  background: var(--accent);
+}
+.kicker-pos {
+  display: inline-block;
+  padding: 5px 9px 5px 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  letter-spacing: 0.08em;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+
+.slide-title {
+  margin-top: 14px;
+  font: 900 clamp(2.5rem, 5.2vw, 4.6rem)/0.92 var(--sans);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.lede {
+  margin-top: 16px;
+  max-width: 62ch;
+  font-size: 1.0625rem;
+  color: var(--body);
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+/* ==========================================================================
+   Buttons / chips / data boxes
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 12px 22px;
+  font: 700 12.5px/1 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--white);
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+.btn:hover {
+  background: var(--panel-2);
+  border-color: var(--accent);
+}
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 85%, white);
+  border-color: transparent;
+}
+.btn:focus-visible {
+  outline-offset: 4px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  padding: 5px 10px;
+  font: 500 12px/1.3 var(--mono);
+  color: var(--body);
+  background: var(--asphalt);
+  border: 1px solid var(--line);
+}
+
+.tone-purple {
+  --tone: var(--purple);
+}
+.tone-green {
+  --tone: var(--green);
+}
+.tone-yellow {
+  --tone: var(--yellow);
+}
+
+/* Slanted broadcast data box */
+.databox {
+  position: relative;
+  padding: 14px 18px 14px 22px;
+  background: linear-gradient(100deg, var(--panel-2), var(--panel));
+  clip-path: polygon(var(--slant) 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+}
+.databox::before {
+  content: '';
+  position: absolute;
+  left: var(--slant);
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--tone, var(--accent));
+  transform: skewX(-17deg);
+}
+.databox-value {
+  font: 700 clamp(1.4rem, 2.2vw, 1.9rem)/1 var(--mono);
+  color: var(--tone, var(--white));
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.databox-unit {
+  font-size: 0.6em;
+  margin-left: 2px;
+  opacity: 0.85;
+}
+.databox-label {
+  margin-top: 8px;
+  font: 600 11px/1.3 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font: 700 11px/1.2 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tone, var(--white));
+  border: 1px solid color-mix(in srgb, var(--tone, var(--white)) 55%, transparent);
+  background: color-mix(in srgb, var(--tone, var(--white)) 10%, transparent);
+}
+.badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Duotone imagery: greyscale source tinted with the current livery accent */
+.duotone {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  isolation: isolate;
+}
+.duotone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.15) brightness(0.8);
+}
+.duotone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  mix-blend-mode: color;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Slides — default (vertical, mobile, reduced-motion, no-JS)
+   ========================================================================== */
+.deck {
+  position: relative;
+}
+
+.slide {
+  position: relative;
+  padding: 72px 20px;
+  border-top: 1px solid var(--line);
+}
+.slide:first-child {
+  border-top: 0;
+}
+
+.slide-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.slide-head {
+  margin-bottom: 32px;
+}
+
+.hud {
+  display: none;
+}
+
+/* ==========================================================================
+   Carousel mode (enabled by JS on wide screens without reduced motion)
+   ========================================================================== */
+html.carousel,
+html.carousel body {
+  height: 100%;
+  overflow: hidden;
+}
+
+html.carousel .deck {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: var(--tower-w);
+  right: 0;
+  overflow: clip;
+  touch-action: pan-y;
+}
+
+html.carousel .track {
+  display: flex;
+  height: 100%;
+  transform: translate3d(calc(var(--i, 0) * -100% + var(--drag, 0px)), 0, 0);
+  transition: transform 0.75s var(--ease);
+  will-change: transform;
+}
+html.carousel .track.is-dragging,
+html.carousel .track.is-instant {
+  transition: none;
+}
+
+html.carousel .slide {
+  flex: 0 0 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+html.carousel .slide-inner {
+  min-height: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px clamp(36px, 4.5vw, 80px) 104px;
+  transition:
+    opacity 0.5s ease 0.2s,
+    transform 0.6s var(--ease) 0.15s;
+}
+html.carousel .slide[inert] .slide-inner {
+  opacity: 0;
+  transform: translateX(48px);
+  transition-delay: 0s;
+}
+
+html.carousel .hud {
+  display: flex;
+}
+
+html.carousel .slide-head {
+  margin-bottom: 24px;
+}
+
+html.carousel .slide-title {
+  font-size: clamp(2.5rem, min(5.2vw, 7.6vh), 4.6rem);
+}
+
+@media (max-height: 820px) {
+  html.carousel .slide-inner {
+    padding-top: 32px;
+    padding-bottom: 96px;
+  }
+  html.carousel .slide-head {
+    margin-bottom: 18px;
+  }
+  html.carousel .slide-title {
+    margin-top: 10px;
+  }
+  html.carousel .lede {
+    margin-top: 10px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-height: 760px) {
+  html.carousel .slide-inner {
+    padding-top: 22px;
+    padding-bottom: 88px;
+  }
+  html.carousel .slide-head {
+    margin-bottom: 14px;
+  }
+  html.carousel .slide-title {
+    font-size: clamp(2.25rem, 6.8vh, 3.4rem);
+  }
+  html.carousel .lede {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 1439px) {
+  :root {
+    --tower-w: 212px;
+  }
+}
+
+/* Fades tall, scrolled slide content out beneath the HUD. */
+html.carousel .deck::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 96px;
+  background: linear-gradient(to top, var(--bg) 35%, transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Initial state applies instantly; transitions start after the first frame. */
+html.preload *:not(.lights, .lights *) {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

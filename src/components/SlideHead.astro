@@ -1,0 +1,18 @@
+---
+import { slides, type SlideId } from '../data/content';
+
+interface Props {
+  id: SlideId;
+  lede?: string;
+}
+
+const { id, lede } = Astro.props;
+const index = slides.findIndex((s) => s.id === id);
+const slide = slides[index]!;
+---
+
+<header class="slide-head">
+  <p class="kicker"><span class="kicker-pos">P{index + 1}</span>{slide.kicker}</p>
+  <h2 class="slide-title" id={`${id}-title`} tabindex="-1" data-slide-heading>{slide.title}</h2>
+  {lede && <p class="lede">{lede}</p>}
+</header>

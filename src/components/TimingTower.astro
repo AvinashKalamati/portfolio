@@ -1,0 +1,288 @@
+---
+import { driver, liveries, slides } from '../data/content';
+---
+
+<nav class="tower" aria-label="Sections" data-tower>
+  <a class="tower-brand" href="#home" data-nav-index="0">
+    <span class="tower-num" aria-hidden="true">{driver.number}</span>
+    <span class="tower-id">
+      <span class="tower-initials">{driver.initials}</span>
+      <span class="tower-name">{driver.name}</span>
+    </span>
+    <span class="sr-only">— back to start</span>
+  </a>
+
+  <p class="tower-label" aria-hidden="true"><span>Pos</span><span>Section</span></p>
+
+  <ol class="tower-list">
+    {
+      slides.map((s, i) => (
+        <li>
+          <a class="tower-link" href={`#${s.id}`} data-nav-index={i} aria-current={i === 0 ? 'true' : undefined}>
+            <span class="tower-pos">{i + 1}</span>
+            <span class="tower-text">
+              <span class="tower-title">{s.title}</span>
+              <span class="tower-kicker">{s.kicker}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="livery" role="group" aria-label="Livery colour" data-livery-switcher>
+    <span class="livery-label" aria-hidden="true">Livery</span>
+    {
+      liveries.map((l, i) => (
+        <button
+          type="button"
+          class="livery-swatch"
+          style={`--swatch:${l.accent}`}
+          data-livery-id={l.id}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+          title={l.name}
+        >
+          <span class="sr-only">{l.name} livery</span>
+        </button>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  /* ---------- Default: sticky top bar (mobile / vertical mode) ---------- */
+  .tower {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'brand livery'
+      'list list';
+    align-items: center;
+    gap: 0 12px;
+    background: rgb(11 11 13 / 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tower-brand {
+    grid-area: brand;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: var(--white);
+  }
+  .tower-num {
+    font: 900 26px/1 var(--sans);
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .tower-id {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+  .tower-initials {
+    font: 700 14px/1 var(--mono);
+    letter-spacing: 0.12em;
+  }
+  .tower-name {
+    font: 500 10.5px/1.3 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tower-label {
+    display: none;
+  }
+
+  .tower-list {
+    grid-area: list;
+    display: flex;
+    gap: 4px;
+    padding: 0 12px 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tower-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tower-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--body);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .tower-link:hover {
+    color: var(--white);
+    border-color: var(--line-2);
+  }
+  .tower-pos {
+    display: grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    font: 700 12px/1 var(--mono);
+    color: var(--bg);
+    background: var(--white);
+  }
+  .tower-title {
+    font: 700 12.5px/1 var(--sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .tower-kicker {
+    display: none;
+  }
+  .tower-link[aria-current='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .livery {
+    grid-area: livery;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 16px;
+  }
+  .livery-label {
+    font: 700 10px/1 var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 2px;
+  }
+  .livery-swatch {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: 2px solid var(--line-2);
+    background: var(--swatch);
+    cursor: pointer;
+    clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+    transition: transform 0.15s;
+  }
+  .livery-swatch:hover {
+    transform: translateY(-1px);
+  }
+  .livery-swatch[aria-pressed='true'] {
+    border-color: var(--white);
+    box-shadow: inset 0 0 0 2px var(--bg);
+  }
+
+  @media (max-width: 420px) {
+    .livery-label {
+      display: none;
+    }
+  }
+
+  /* ---------- Carousel mode: fixed left timing tower ---------- */
+  :global(html.carousel) .tower {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--tower-w);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 22px 0 18px;
+    background: var(--asphalt);
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+    backdrop-filter: none;
+  }
+  :global(html.carousel) .tower-brand {
+    padding: 0 18px 18px;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  :global(html.carousel) .tower-num {
+    font-size: 40px;
+  }
+  :global(html.carousel) .tower-label {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 18px 8px;
+    font: 700 10px/1 var(--mono);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  :global(html.carousel) .tower-label span:last-child {
+    flex: 1;
+    margin-left: 22px;
+  }
+  :global(html.carousel) .tower-list {
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 0 10px;
+    overflow: visible;
+  }
+  :global(html.carousel) .tower-link {
+    position: relative;
+    gap: 12px;
+    padding: 8px 10px 8px 8px;
+    background: transparent;
+    border: 0;
+    border-left: 3px solid transparent;
+  }
+  :global(html.carousel) .tower-link:hover {
+    background: var(--panel);
+    border-left-color: var(--line-2);
+  }
+  :global(html.carousel) .tower-pos {
+    min-width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  :global(html.carousel) .tower-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  :global(html.carousel) .tower-title {
+    font-size: 14px;
+  }
+  :global(html.carousel) .tower-kicker {
+    display: block;
+    font: 500 10px/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  :global(html.carousel) .tower-link[aria-current='true'] {
+    background: var(--accent);
+    border-left-color: var(--white);
+  }
+  :global(html.carousel) .tower-link[aria-current='true'] .tower-kicker {
+    color: inherit;
+  }
+  :global(html.carousel) .livery {
+    flex-wrap: wrap;
+    padding: 14px 18px 0;
+    border-top: 1px solid var(--line);
+  }
+  :global(html.carousel) .livery-label {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+</style>

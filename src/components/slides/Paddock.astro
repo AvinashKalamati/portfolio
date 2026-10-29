@@ -1,0 +1,77 @@
+---
+import { Image } from 'astro:assets';
+import motorcycle from '../../assets/paddock-motorcycle.webp';
+import { paddock } from '../../data/content';
+import SlideHead from '../SlideHead.astro';
+---
+
+<section class="slide slide-paddock" id="paddock" data-slide aria-labelledby="paddock-title">
+  <div class="slide-inner">
+    <div class="paddock">
+      <figure class="paddock-media duotone">
+        <Image src={motorcycle} alt={paddock.imageAlt} widths={[480, 800, 1200]} sizes="(min-width: 960px) 50vw, 100vw" />
+      </figure>
+      <div class="paddock-copy">
+        <SlideHead id="paddock" />
+        <p class="paddock-headline">{paddock.headline}</p>
+        <p class="paddock-body">{paddock.body}</p>
+        <p class="paddock-target">
+          <span class="paddock-flag" aria-hidden="true"></span>
+          {paddock.target}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paddock {
+    display: grid;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .paddock-media {
+    aspect-ratio: 3 / 2;
+    border: 1px solid var(--line-2);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+  }
+
+  .paddock-headline {
+    margin: -8px 0 14px;
+    font: 700 clamp(1.3rem, 2.2vw, 1.75rem)/1.2 var(--sans);
+    color: var(--white);
+  }
+
+  .paddock-body {
+    max-width: 56ch;
+    font-size: 1.0625rem;
+  }
+
+  .paddock-target {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 10px 14px;
+    font: 700 12px/1.4 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--panel);
+    border-left: 3px solid var(--yellow);
+  }
+  .paddock-flag {
+    flex: none;
+    width: 20px;
+    height: 14px;
+    background: repeating-conic-gradient(var(--white) 0 25%, var(--bg) 0 50%) 0 0 / 7px 7px;
+  }
+
+  @media (min-width: 960px) {
+    .paddock {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(36px, 5vw, 72px);
+    }
+  }
+</style>

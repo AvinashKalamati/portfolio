@@ -1,0 +1,125 @@
+<div class="lights" aria-hidden="true" data-lights>
+  <div class="lights-gantry">
+    {
+      [0, 1, 2, 3, 4].map(() => (
+        <span class="pod">
+          <i />
+          <i />
+        </span>
+      ))
+    }
+  </div>
+  <p class="lights-text">Lights out <span>and away we go</span></p>
+  <button type="button" class="lights-skip" tabindex="-1" data-lights-skip>Skip intro ›</button>
+</div>
+
+<style>
+  .lights {
+    display: none;
+  }
+
+  :global(html.lights-on) .lights {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 34px;
+    background: rgb(7 7 9 / 0.97);
+    cursor: pointer;
+    /* Failsafe: hide even if the script never runs. */
+    animation: lights-failsafe 0.3s 2.6s forwards;
+  }
+
+  .lights.is-done {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .lights-gantry {
+    display: flex;
+    gap: clamp(10px, 2vw, 22px);
+    padding: 16px clamp(14px, 2.4vw, 26px);
+    background: #050506;
+    border: 1px solid var(--line);
+    border-top: 6px solid #1a1b1f;
+  }
+
+  .pod {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background: #111114;
+    border-radius: 8px;
+  }
+  .pod i {
+    width: clamp(32px, 6vw, 58px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #232327;
+    box-shadow: inset 0 -4px 8px rgb(0 0 0 / 0.6);
+    transition:
+      background-color 0.06s,
+      box-shadow 0.06s;
+  }
+
+  .lights[data-step='1'] .pod:nth-child(-n + 1) i,
+  .lights[data-step='2'] .pod:nth-child(-n + 2) i,
+  .lights[data-step='3'] .pod:nth-child(-n + 3) i,
+  .lights[data-step='4'] .pod:nth-child(-n + 4) i,
+  .lights[data-step='5'] .pod:nth-child(-n + 5) i {
+    background: #ff1e10;
+    box-shadow:
+      0 0 24px rgb(255 30 16 / 0.85),
+      inset 0 -4px 8px rgb(120 0 0 / 0.5);
+  }
+
+  .lights-text {
+    font: 900 clamp(1.4rem, 3.4vw, 2.6rem)/1 var(--sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
+  }
+  .lights-text span {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .lights.is-out .lights-text {
+    opacity: 1;
+    transform: none;
+  }
+
+  .lights-skip {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    padding: 10px 14px;
+    font: 700 12px/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--body);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+  }
+  .lights-skip:hover {
+    color: var(--white);
+    border-color: var(--white);
+  }
+
+  @keyframes lights-failsafe {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+</style>
